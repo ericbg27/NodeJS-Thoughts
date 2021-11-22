@@ -35,6 +35,25 @@
                "{{this.title}}"
            </blockquote> 
            <figcaption>por <span>{{this.User.name}}</span></figcaption>
+           <!--Lidar com o fato do usuario atual ter curtido ou não-->
+           
+            {{#if this.userLiked}}
+                <form action="/thoughts/unlike" method="POST">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <div class="unlike-button">
+                        <button type="submit"><i class="bi bi-heart-fill"></i></button>
+                        <p>{{this.likeString}}</p>
+                    </div>
+                </form>
+            {{else}}
+                <form action="/thoughts/like" method="POST">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <div class="like-button">
+                        <button type="submit"><i class="bi bi-heart-fill"></i></button>
+                        <p>{{this.likeString}}</p>
+                    </div>
+                </form>
+            {{/if}}
         </figure>
     {{/each}}
 </div>

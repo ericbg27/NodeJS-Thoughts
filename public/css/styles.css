@@ -264,6 +264,52 @@ form input[type="submit"]:hover,
     margin: 0 auto 1em;
 }
 
+.like-button button {
+    margin-bottom: 0;
+    padding-top: 1em;
+    border: none;
+    cursor: pointer;
+    margin: 0 7px;
+    display: inline;
+}
+
+.like-button i {
+    color: white;
+    fill: white;
+}
+
+.like-button i:hover {
+    color: red;
+    fill: red;
+}
+
+.like-button p {
+    display: inline;
+}
+
+.unlike-button button {
+    margin-bottom: 0;
+    padding-top: 1em;
+    border: none;
+    cursor: pointer;
+    margin: 0 7px;
+    display: inline;
+}
+
+.unlike-button i {
+    color: red;
+    fill: red;
+}
+
+.unlike-button i:hover {
+    color: white;
+    fill: white;
+}
+
+.unlike-button p {
+    display: inline;
+}
+
 .thoughts-container blockquote {
     font-style: italic;
     font-size: 2em;
