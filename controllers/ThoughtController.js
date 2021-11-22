@@ -42,11 +42,16 @@ module.exports = class ThoughtController {
         const currentUserId = req.session.userid;
 
         for(let thought in thoughts) {
+            const thoughtLikes = thoughts[thought].UserLike;
+
+            let currentUserLikeIndex = -1
+
             let userLiked = false;
             if(currentUserId !== undefined) {
-                for(let user in thoughts[thought].UserLike) {
-                    if(thoughts[thought].UserLike[user].id == currentUserId) {
+                for(let user in thoughtLikes) {
+                    if(thoughtLikes[user].id == currentUserId) {
                         userLiked = true;
+                        currentUserLikeIndex = user
 
                         break;
                     }
@@ -58,15 +63,21 @@ module.exports = class ThoughtController {
                 enumerable: true
             })
 
-            const likeNumber = thoughts[thought].UserLike.length;
+            const likeNumber = thoughtLikes.length;
 
             let userNames = []
-            for(let i = 0; i < likeNumber; i++) {
-                if(i == 2) {
-                    break;
+            if(userLiked) {
+                userNames.push("Você")
+            }
+
+            for(let i = 0; i < thoughtLikes.length; i++) {
+                if(i != currentUserLikeIndex) {
+                    userNames.push(thoughtLikes[i].name);
                 }
 
-                userNames.push(thoughts[thought].UserLike[i].name);
+                if(userNames.length == 2) {
+                    break;
+                }
             }
             
             let likeString = "";
@@ -81,7 +92,7 @@ module.exports = class ThoughtController {
                     if(likeNumber == 1) {
                         likeString = likeString.concat(userNames[0])
                     } else {
-                        likeString = likeString.concat(userNames[0],"e ");
+                        likeString = likeString.concat(userNames[0]," e ");
                         likeString = likeString.concat(userNames[1]);
                     }
                 }
