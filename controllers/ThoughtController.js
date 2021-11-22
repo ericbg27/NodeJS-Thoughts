@@ -1,5 +1,6 @@
 const Thought = require("../models/Thought")
 const User = require("../models/User")
+const Like = require("../models/Like")
 
 const { Op } = require("sequelize")
 
@@ -20,7 +21,10 @@ module.exports = class ThoughtController {
         }
 
         const thoughtsData = await Thought.findAll({
-            include: User,
+            include: [User, {
+                model: User,
+                as: "UserLike"
+            }],
             where: {
                 title: {[Op.like]: `%${search}%`}
             },
@@ -35,11 +39,68 @@ module.exports = class ThoughtController {
             thoughtsQty = false
         }
 
+        const currentUserId = req.session.userid;
+
+        for(let thought in thoughts) {
+            let userLiked = false;
+            if(currentUserId !== undefined) {
+                for(let user in thoughts[thought].UserLike) {
+                    if(thoughts[thought].UserLike[user].id == currentUserId) {
+                        userLiked = true;
+
+                        break;
+                    }
+                }
+            }
+
+            Object.defineProperty(thoughts[thought], "userLiked", {
+                value: userLiked,
+                enumerable: true
+            })
+
+            const likeNumber = thoughts[thought].UserLike.length;
+
+            let userNames = []
+            for(let i = 0; i < likeNumber; i++) {
+                if(i == 2) {
+                    break;
+                }
+
+                userNames.push(thoughts[thought].UserLike[i].name);
+            }
+            
+            let likeString = "";
+            if(likeNumber > 0) {
+                likeString = "Curtido por ";
+                if(likeNumber > 2) {
+                    likeString = likeString.concat(userNames[0],", ");
+                    likeString = likeString.concat(userNames[1]," ");
+
+                    likeString = likeString.concat(`e mais ${likeNumber-2} outros`);
+                } else {
+                    if(likeNumber == 1) {
+                        likeString = likeString.concat(userNames[0])
+                    } else {
+                        likeString = likeString.concat(userNames[0],"e ");
+                        likeString = likeString.concat(userNames[1]);
+                    }
+                }
+            }
+
+            Object.defineProperty(thoughts[thought], "likeString", {
+                value: likeString,
+                enumerable: true
+            })
+        }
+
         res.render("thoughts/home", { thoughts, search, thoughtsQty })
     }
 
     static async dashboard(req, res) {
-        const userId = req.session.userid
+        let userId = req.session.userid
+        if(userId === undefined) {
+            userId = -1
+        }
 
         const user = await User.findOne({
             where: {
@@ -52,17 +113,19 @@ module.exports = class ThoughtController {
         // check if user exists
         if(!user) {
             res.redirect("/login")
+
+            return
+        } else {
+            const thoughts = user.Thoughts.map((result) => result.dataValues)
+
+            let emptyThougths = false
+
+            if(thoughts.length === 0) {
+                emptyThougths = true
+            }
+
+            res.render("thoughts/dashboard", {thoughts, emptyThougths})
         }
-
-        const thoughts = user.Thoughts.map((result) => result.dataValues)
-
-        let emptyThougths = false
-
-        if(thoughts.length === 0) {
-            emptyThougths = true
-        }
-
-        res.render("thoughts/dashboard", {thoughts, emptyThougths})
     }
 
     static createThought(req, res) {
@@ -126,6 +189,45 @@ module.exports = class ThoughtController {
 
             req.session.save(() => {
                 res.redirect("/thoughts/dashboard")
+            })
+        } catch(error) {
+            console.log(`Aconteceu um erro ${error}`)
+        }
+    }
+
+    static async likeThought(req, res) {
+        const thoughtId = req.body.id
+        const userId = req.session.userid
+        
+        const like = {
+            ThoughtId: thoughtId,
+            UserId: userId
+        }
+
+        try {
+            await Like.create(like)
+           
+            req.flash("message", "Curtida salva com sucesso!")
+
+            req.session.save(() => {
+                res.redirect("/")
+            })
+        } catch(error) {
+            console.log(`Aconteceu um erro ${error}`)
+        }
+    }
+
+    static async unlikeThought(req, res) {
+        const thoughtId = req.body.id
+        const userId = req.session.userid
+
+        try {
+            await Like.destroy({ where: { thoughtId: thoughtId, userId: userId }})
+
+            req.flash("message", "Curtida retirada com sucesso!")
+
+            req.session.save(() => {
+                res.redirect("/")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)

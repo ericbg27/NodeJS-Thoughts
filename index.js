@@ -11,6 +11,7 @@ const conn = require("./db/conn")
 // Models
 const Thought = require("./models/Thought")
 const User = require("./models/User")
+const Like = require("./models/Like")
 
 // Import Router
 const thoughtsRoutes = require("./routes/thoughtsRoutes")
