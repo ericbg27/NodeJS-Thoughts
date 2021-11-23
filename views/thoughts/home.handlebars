@@ -67,6 +67,12 @@
                     <div class="comment">
                         <p>Por: {{this.User.name}}</p>
                         <p class="multiline">{{this.content}}</p>
+                        {{#if this.Owns}}
+                            <form action="/comments/delete" method="POST" class="comment-options">
+                                <input type="hidden" name="id" value={{this.id}}>
+                                <input type="submit" class="btn" value="Excluir">
+                            </form>
+                        {{/if}}
                     </div>
                 {{/each}}
             </div>

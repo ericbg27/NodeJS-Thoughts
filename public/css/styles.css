@@ -363,8 +363,25 @@ form input[type="submit"]:hover,
 .comment p.multiline {
     background-color: transparent;
     color: black;
-    padding-bottom: 1em;
+    padding-bottom: 1.5em;
     white-space: pre-wrap;
+}
+
+.comment-options {
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.comment-options .btn {
+    color: #f6982d;
+    width: 20%;
+}
+
+.comment-options .btn:hover {
+    color: red;
 }
 
 .thoughts-container blockquote {

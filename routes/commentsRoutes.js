@@ -6,5 +6,6 @@ const CommentController = require("../controllers/CommentController")
 const checkAuth = require("../helpers/auth").checkAuth
 
 router.post("/add", checkAuth, CommentController.createComment)
+router.post("/delete", checkAuth, CommentController.deleteComment)
 
 module.exports = router

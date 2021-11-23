@@ -112,6 +112,18 @@ module.exports = class ThoughtController {
                 value: likeString,
                 enumerable: true
             })
+
+            for(let comment in thoughts[thought].Comments) {
+                let userOwns = false
+                if(thoughts[thought].Comments[comment].UserId == currentUserId) {
+                    userOwns = true
+                }
+
+                Object.defineProperty(thoughts[thought].Comments[comment], "Owns", {
+                    value: userOwns,
+                    enumerable: true
+                })
+            }
         }
         
         res.render("thoughts/home", { thoughts, search, thoughtsQty })

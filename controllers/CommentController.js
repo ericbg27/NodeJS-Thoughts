@@ -6,8 +6,8 @@ const { Op } = require("sequelize")
 
 module.exports = class CommentController {
     static async createComment(req, res) {
-        const thoughtId = req.body.id;
-        const userId = req.session.userid;
+        const thoughtId = req.body.id
+        const userId = req.session.userid
 
         const contentData = req.body.content;
         const content = contentData.join("").trim()
@@ -22,6 +22,22 @@ module.exports = class CommentController {
             await Comment.create(comment)
 
             req.flash("message", "Comentário criado com sucesso!")
+
+            req.session.save(() => {
+                res.redirect("/")
+            })
+        } catch(error) {
+            console.log(`Aconteceu um erro ${error}`)
+        }
+    }
+
+    static async deleteComment(req, res) {
+        const commentId = req.body.id
+        
+        try {
+            await Comment.destroy({ where: { id: commentId } })
+
+            req.flash("message", "Comentário deletado com sucesso!")
 
             req.session.save(() => {
                 res.redirect("/")
