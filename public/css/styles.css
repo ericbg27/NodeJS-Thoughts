@@ -310,6 +310,81 @@ form input[type="submit"]:hover,
     display: inline;
 }
 
+.comment-submit {
+    max-height: 25vh;
+    max-width: 100%;
+    background-color: transparent;
+    margin: 0 auto;
+}
+
+.comment-submit textarea {
+    background-color: transparent !important;
+    width: 100%;
+    height: 5em;
+    max-height: 7em;
+    min-width: 50%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow-y: scroll;
+    padding-bottom: 3em;
+}
+
+.comment-section {
+    max-height: 10%;
+    max-width: 50%;
+    background-color: transparent;
+    margin: 0 auto;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1em;
+}
+
+.comment-subsection {
+    max-height: 50vh;
+    width: 100%;
+    background-color: lightgray;
+    overflow-y: scroll;
+    margin: 0 auto;
+}
+
+.comment {
+    height: 10%;
+    padding: 2%;
+    margin: 2%;
+    background-color: #ffff;
+    color: black;
+}
+
+.comment p {
+    background-color: transparent;
+    color: #004085;
+    padding-bottom: 1em;
+    white-space: pre-wrap;
+}
+
+.comment p.multiline {
+    background-color: transparent;
+    color: black;
+    padding-bottom: 1.5em;
+    white-space: pre-wrap;
+}
+
+.comment-options {
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.comment-options .btn {
+    color: #f6982d;
+    width: 20%;
+}
+
+.comment-options .btn:hover {
+    color: red;
+}
+
 .thoughts-container blockquote {
     font-style: italic;
     font-size: 2em;

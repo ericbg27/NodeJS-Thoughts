@@ -1,6 +1,7 @@
 const Thought = require("../models/Thought")
 const User = require("../models/User")
 const Like = require("../models/Like")
+const Comment = require("../models/Comment")
 
 const { Op } = require("sequelize")
 
@@ -21,10 +22,19 @@ module.exports = class ThoughtController {
         }
 
         const thoughtsData = await Thought.findAll({
-            include: [User, {
-                model: User,
-                as: "UserLike"
-            }],
+            include: [User, 
+                {
+                    model: Comment,
+                    include: {
+                        model: User,
+                        attributes: ["name"]
+                    }
+                }, 
+                {
+                    model: User,
+                    as: "UserLike"
+                }
+            ],
             where: {
                 title: {[Op.like]: `%${search}%`}
             },
@@ -102,8 +112,20 @@ module.exports = class ThoughtController {
                 value: likeString,
                 enumerable: true
             })
-        }
 
+            for(let comment in thoughts[thought].Comments) {
+                let userOwns = false
+                if(thoughts[thought].Comments[comment].UserId == currentUserId) {
+                    userOwns = true
+                }
+
+                Object.defineProperty(thoughts[thought].Comments[comment], "Owns", {
+                    value: userOwns,
+                    enumerable: true
+                })
+            }
+        }
+        
         res.render("thoughts/home", { thoughts, search, thoughtsQty })
     }
 

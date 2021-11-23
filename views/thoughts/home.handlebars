@@ -35,7 +35,6 @@
                "{{this.title}}"
            </blockquote> 
            <figcaption>por <span>{{this.User.name}}</span></figcaption>
-           <!--Lidar com o fato do usuario atual ter curtido ou não-->
            
             {{#if this.userLiked}}
                 <form action="/thoughts/unlike" method="POST">
@@ -55,5 +54,28 @@
                 </form>
             {{/if}}
         </figure>
+        <div class="comment-section">
+            <div class="comment-submit">
+                <textarea maxlength="255" form="comment-form" name="content" placeholder="Escreva aqui seu comentário"></textarea>
+                <form action="/comments/add" method="POST" id="comment-form">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <input type="submit" class="btn" value="Comentar">
+                </form>
+            </div>
+            <div class="comment-subsection">
+                {{#each this.Comments}}
+                    <div class="comment">
+                        <p>Por: {{this.User.name}}</p>
+                        <p class="multiline">{{this.content}}</p>
+                        {{#if this.Owns}}
+                            <form action="/comments/delete" method="POST" class="comment-options">
+                                <input type="hidden" name="id" value={{this.id}}>
+                                <input type="submit" class="btn" value="Excluir">
+                            </form>
+                        {{/if}}
+                    </div>
+                {{/each}}
+            </div>
+        </div>
     {{/each}}
 </div>
