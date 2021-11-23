@@ -322,6 +322,7 @@ form input[type="submit"]:hover,
     width: 100%;
     height: 5em;
     max-height: 7em;
+    min-width: 50%;
     max-width: 100%;
     margin: 0 auto;
     overflow-y: scroll;
@@ -329,7 +330,7 @@ form input[type="submit"]:hover,
 }
 
 .comment-section {
-    max-height: 50vh;
+    max-height: 10%;
     max-width: 50%;
     background-color: transparent;
     margin: 0 auto;
@@ -338,7 +339,7 @@ form input[type="submit"]:hover,
 }
 
 .comment-subsection {
-    height: 50%;
+    max-height: 50vh;
     width: 100%;
     background-color: lightgray;
     overflow-y: scroll;
