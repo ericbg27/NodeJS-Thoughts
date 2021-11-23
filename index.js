@@ -12,13 +12,16 @@ const conn = require("./db/conn")
 const Thought = require("./models/Thought")
 const User = require("./models/User")
 const Like = require("./models/Like")
+const Comment = require("./models/Comment")
 
 // Import Router
+const commentsRoutes = require("./routes/commentsRoutes")
 const thoughtsRoutes = require("./routes/thoughtsRoutes")
 const authRoutes = require("./routes/authRoutes")
 
 // Import Controller
 const ThoughtController = require("./controllers/ThoughtController")
+const CommentController = require("./controllers/CommentController")
 
 app.engine("handlebars", exphbs())
 app.set("view engine", "handlebars")
@@ -68,6 +71,7 @@ app.use((req, res, next) => {
 })
 
 // Router
+app.use("/comments", commentsRoutes)
 app.use("/thoughts", thoughtsRoutes)
 app.use("/", authRoutes)
 
