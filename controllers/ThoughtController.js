@@ -117,8 +117,14 @@ module.exports = class ThoughtController {
             where: {
                 id: userId,
             },
-            include: Thought,
+            //include: Thought,
             plain: true,
+        })
+
+        const userThoughts = await Thought.findAll({
+            where: {
+                UserId: userId,
+            }
         })
 
         // check if user exists
@@ -126,8 +132,8 @@ module.exports = class ThoughtController {
             res.redirect("/login")
 
             return
-        } else {
-            const thoughts = user.Thoughts.map((result) => result.dataValues)
+        } else {    
+            const thoughts = userThoughts.map((result) => result.get({ plain: true }))
 
             let emptyThougths = false
 
