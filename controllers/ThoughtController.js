@@ -52,6 +52,16 @@ module.exports = class ThoughtController {
         const currentUserId = req.session.userid;
 
         for(let thought in thoughts) {
+            let userIsOwner = false
+            if(thoughts[thought].UserId == currentUserId) {
+                userIsOwner = true                
+            }
+
+            Object.defineProperty(thoughts[thought], "userOwns", {
+                value: userIsOwner,
+                enumerable: true
+            })
+
             const thoughtLikes = thoughts[thought].UserLike;
 
             let currentUserLikeIndex = -1

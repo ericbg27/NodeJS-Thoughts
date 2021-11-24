@@ -264,6 +264,22 @@ form input[type="submit"]:hover,
     margin: 0 auto 1em;
 }
 
+.thought-options {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.thought-options form {
+    padding-bottom: 1em;
+}
+
+.thought-options .btn {
+    color: #f6982d;
+    width: 10%;
+    text-align: center;
+}
+
 .like-button button {
     margin-bottom: 0;
     padding-top: 1em;
