@@ -34,25 +34,34 @@
            <blockquote>
                "{{this.title}}"
            </blockquote> 
-           <figcaption>por <span>{{this.User.name}}</span></figcaption>
-           
-            {{#if this.userLiked}}
-                <form action="/thoughts/unlike" method="POST">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <div class="unlike-button">
-                        <button type="submit"><i class="bi bi-heart-fill"></i></button>
-                        <p>{{this.likeString}}</p>
-                    </div>
-                </form>
-            {{else}}
-                <form action="/thoughts/like" method="POST">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <div class="like-button">
-                        <button type="submit"><i class="bi bi-heart-fill"></i></button>
-                        <p>{{this.likeString}}</p>
-                    </div>
-                </form>
-            {{/if}}
+           {{#if this.userOwns}}
+            <figcaption>por <span>Você</span></figcaption>
+           {{else}}
+            <figcaption>por <span>{{this.User.name}}</span></figcaption>
+           {{/if}}
+
+           <div class="thought-options">
+                {{#if this.userLiked}}
+                    <form action="/thoughts/unlike" method="POST">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <div class="unlike-button">
+                            <button type="submit"><i class="bi bi-heart-fill"></i></button>
+                            <p>{{this.likeString}}</p>
+                        </div>
+                    </form>
+                {{else}}
+                    <form action="/thoughts/like" method="POST">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <div class="like-button">
+                            <button type="submit"><i class="bi bi-heart-fill"></i></button>
+                            <p>{{this.likeString}}</p>
+                        </div>
+                    </form>
+                {{/if}}
+                {{#if this.userOwns}}
+                    <a href="/thoughts/edit/{{this.id}}" class="btn">Editar</a>
+                {{/if}}
+            </div>
         </figure>
         <div class="comment-section">
             <div class="comment-submit">
