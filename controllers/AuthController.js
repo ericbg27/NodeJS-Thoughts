@@ -1,4 +1,4 @@
-const User = require("../models/User")
+const User = require("../database/models/User")
 
 const bcrypt = require("bcryptjs")
 
@@ -25,6 +25,8 @@ module.exports = class AuthController {
 
         if(!passwordMatch) {
             req.flash("message", "Senha inválida!")
+            
+            res.status(401)
             res.render("auth/login")
 
             return
@@ -36,7 +38,7 @@ module.exports = class AuthController {
         req.flash("message", "Autenticação realizada com sucesso!")
 
         req.session.save(() => {
-            res.redirect("/")
+            res.redirect(200, "/")
         })
     }
 

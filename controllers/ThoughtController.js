@@ -193,7 +193,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Pensamento criado com sucesso!")
 
             req.session.save(() => {
-                res.redirect("/thoughts/dashboard")
+                res.redirect(201, "/thoughts/dashboard")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
