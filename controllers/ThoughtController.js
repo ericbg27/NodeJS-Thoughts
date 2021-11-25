@@ -210,7 +210,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Pensamento removido com sucesso!")
 
             req.session.save(() => {
-                res.redirect("/thoughts/dashboard")
+                res.redirect(200, "/thoughts/dashboard")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
@@ -221,7 +221,8 @@ module.exports = class ThoughtController {
         const id = req.params.id
 
         const thought = await Thought.findOne({where: {id: id}, raw: true})
-
+        
+        res.status(200)
         res.render("thoughts/edit", {thought})
     }
 
@@ -237,7 +238,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Pensamento atualizado com sucesso!")
 
             req.session.save(() => {
-                res.redirect("/thoughts/dashboard")
+                res.redirect(200, "/thoughts/dashboard")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
@@ -259,7 +260,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Curtida salva com sucesso!")
 
             req.session.save(() => {
-                res.redirect("/")
+                res.redirect(201, "/")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
@@ -276,7 +277,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Curtida retirada com sucesso!")
 
             req.session.save(() => {
-                res.redirect("/")
+                res.redirect(200, "/")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)

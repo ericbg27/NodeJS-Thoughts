@@ -16,6 +16,14 @@ module.exports = {
           password: bcrypt.hashSync("1234", salt),
           createdAt: new Date(),
           updatedAt: new Date()
+        },
+        {
+          id: 2,
+          name: "Joao",
+          email: "joao@teste.com",
+          password: bcrypt.hashSync("1234", salt),
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ]
     )
