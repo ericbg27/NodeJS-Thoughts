@@ -136,6 +136,7 @@ module.exports = class ThoughtController {
             }
         }
         
+        res.status(200)
         res.render("thoughts/home", { thoughts, search, thoughtsQty })
     }
 
@@ -159,9 +160,12 @@ module.exports = class ThoughtController {
             }
         })
 
+        console.log(user)
+
         // check if user exists
         if(!user) {
-            res.redirect("/login")
+            console.log("TESTE5")
+            res.redirect(401, "/login")
 
             return
         } else {    
@@ -172,31 +176,48 @@ module.exports = class ThoughtController {
             if(thoughts.length === 0) {
                 emptyThougths = true
             }
-
+            
+            res.status(200)
             res.render("thoughts/dashboard", {thoughts, emptyThougths})
         }
     }
 
     static createThought(req, res) {
+        res.status(200)
         res.render("thoughts/create")
     }
 
     static async createThoughtSave(req, res) {
         const thought = {
             title: req.body.title,
-            UserId: req.session.userid
+            UserId: (req.session.userid ? req.session.userid : -1)
         }
 
-        try {
-            await Thought.create(thought)
+        const user = await User.findOne({
+            where: {
+                id: thought.UserId,
+            },
+            //include: Thought,
+            plain: true,
+        })
 
-            req.flash("message", "Pensamento criado com sucesso!")
+        if(!user) {
+            console.log("TESTE")
+            res.redirect(401, "/login")
 
-            req.session.save(() => {
-                res.redirect(201, "/thoughts/dashboard")
-            })
-        } catch(error) {
-            console.log(`Aconteceu um erro ${error}`)
+            return
+        } else {
+            try {
+                await Thought.create(thought)
+
+                req.flash("message", "Pensamento criado com sucesso!")
+
+                req.session.save(() => {
+                    res.redirect(201, "/thoughts/dashboard")
+                })
+            } catch(error) {
+                console.log(`Aconteceu um erro ${error}`)
+            }
         }
     }
 

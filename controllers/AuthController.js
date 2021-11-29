@@ -15,6 +15,8 @@ module.exports = class AuthController {
 
         if(!user) {
             req.flash("message", "Usuário não encontrado!")
+
+            res.status(401)
             res.render("auth/login")
 
             return

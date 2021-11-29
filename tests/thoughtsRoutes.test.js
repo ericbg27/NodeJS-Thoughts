@@ -1,17 +1,18 @@
-const session = require("supertest-session")
+const session = require("supertest-session");
+const supertest = require("supertest")
 
 const app = require("../server")
 
+const request = supertest(app)
+
 let testSession;
 
-beforeAll(async function () {
-    testSession = session(app);
-});
-
-describe("Thoughts Endpoints", () => {
+describe("Authenticated Thoughts Endpoints", () => {
     let authenticatedSession;
 
     beforeAll(function (done) {
+        testSession = session(app);
+
         testSession.post("/login")
             .send({
                 email: "matheus@teste.com",
@@ -28,7 +29,18 @@ describe("Thoughts Endpoints", () => {
             });
     });
 
-    it("A thought with title 'Test title' and UserId 1 should be created", async () => {
+    afterAll(() => {
+        testSession.destroy();
+    })
+
+    it("Should return 200 status code when accessing dashboard", async () => {
+        authenticatedSession
+        .get("/thoughts/dashboard")
+        .expect(200)
+        .resolves
+    })
+
+    it("Should create a thought with title 'Test title' and UserId 1", async () => {
         const res = await authenticatedSession
         .post("/thoughts/add")
         .send({
@@ -38,7 +50,7 @@ describe("Thoughts Endpoints", () => {
         expect(res.statusCode).toBe(201);
     });
 
-    it("A thought with id 1 and UserId 1 should be deleted", async () => {
+    it("Should delete a thought with id 1 and UserId 1", async () => {
         const res = await authenticatedSession
         .post("/thoughts/remove")
         .send({
@@ -48,7 +60,7 @@ describe("Thoughts Endpoints", () => {
         expect(res.statusCode).toBe(200)
     });
 
-    it("A thought with id 2 and UserId 1 should be edited", async () => {
+    it("Should edit a thought with id 2 and UserId 1", async () => {
         const res = await authenticatedSession
         .post("/thoughts/edit")
         .send({
@@ -59,7 +71,7 @@ describe("Thoughts Endpoints", () => {
         expect(res.statusCode).toBe(200)
     });
 
-    it("A thought with id 4 should liked by user 1", async () => {
+    it("Should create a like in a thought with id 4 by an user with id 1", async () => {
         const res = await authenticatedSession
         .post("/thoughts/like")
         .send({
@@ -69,7 +81,7 @@ describe("Thoughts Endpoints", () => {
         expect(res.statusCode).toBe(201)
     });
 
-    it("A thought with id 2 should unliked by user 1", async () => {
+    it("Should delete a like by an user with id 1 in a thought with id 2", async () => {
         const res = await authenticatedSession
         .post("/thoughts/unlike")
         .send({
@@ -78,4 +90,33 @@ describe("Thoughts Endpoints", () => {
         
         expect(res.statusCode).toBe(200)
     });
+})
+
+describe("Unauthenticated Thoughts Endpoints", () => {
+    it("Should return 401 status code when accessing dashboard", async () => {
+        await request
+        .get("/thoughts/dashboard")
+        .expect(401)
+        .resolves;
+    })
+
+    it("Should not be able to create a thought", async () => {
+        await request
+        .post("/thoughts/add")
+        .send({
+            title: "Test title"
+        })
+        .expect(401)
+        .resolves;
+    })
+
+    it("Should not be able to delete a thought", async () => {
+        await request
+        .post("/thoughts/remove")
+        .send({
+            id: 2
+        })
+        .expect(401)
+        .resolves;
+    })
 })
