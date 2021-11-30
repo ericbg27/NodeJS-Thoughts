@@ -29,16 +29,12 @@ describe("Authenticated Thoughts Endpoints", () => {
             });
     });
 
-    afterAll(() => {
-        testSession.destroy();
-    })
-
     it("Should return 200 status code when accessing dashboard", async () => {
         authenticatedSession
         .get("/thoughts/dashboard")
         .expect(200)
         .resolves
-    })
+    });
 
     it("Should create a thought with title 'Test title' and UserId 1", async () => {
         const res = await authenticatedSession
@@ -93,12 +89,18 @@ describe("Authenticated Thoughts Endpoints", () => {
 })
 
 describe("Unauthenticated Thoughts Endpoints", () => {
+    it("Should be able to access the homepage", async () => {
+        await request
+        .get("/")
+        .expect(200);
+    });
+
     it("Should return 401 status code when accessing dashboard", async () => {
         await request
         .get("/thoughts/dashboard")
         .expect(401)
         .resolves;
-    })
+    });
 
     it("Should not be able to create a thought", async () => {
         await request
@@ -108,7 +110,7 @@ describe("Unauthenticated Thoughts Endpoints", () => {
         })
         .expect(401)
         .resolves;
-    })
+    });
 
     it("Should not be able to delete a thought", async () => {
         await request
@@ -118,5 +120,5 @@ describe("Unauthenticated Thoughts Endpoints", () => {
         })
         .expect(401)
         .resolves;
-    })
+    });
 })

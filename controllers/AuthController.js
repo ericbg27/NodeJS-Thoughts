@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs")
 
 module.exports = class AuthController {
     static login(req, res) {
+        res.status(200)
         res.render("auth/login")
     }
 
@@ -16,7 +17,7 @@ module.exports = class AuthController {
         if(!user) {
             req.flash("message", "Usuário não encontrado!")
 
-            res.status(401)
+            res.status(400)
             res.render("auth/login")
 
             return
@@ -28,7 +29,7 @@ module.exports = class AuthController {
         if(!passwordMatch) {
             req.flash("message", "Senha inválida!")
             
-            res.status(401)
+            res.status(400)
             res.render("auth/login")
 
             return
@@ -45,6 +46,7 @@ module.exports = class AuthController {
     }
 
     static register(req, res) {
+        res.status(200)
         res.render("auth/register")
     }
 

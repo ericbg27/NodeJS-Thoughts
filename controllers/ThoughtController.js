@@ -160,11 +160,8 @@ module.exports = class ThoughtController {
             }
         })
 
-        console.log(user)
-
         // check if user exists
         if(!user) {
-            console.log("TESTE5")
             res.redirect(401, "/login")
 
             return
@@ -202,7 +199,6 @@ module.exports = class ThoughtController {
         })
 
         if(!user) {
-            console.log("TESTE")
             res.redirect(401, "/login")
 
             return
