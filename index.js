@@ -1,5 +1,4 @@
-
-const conn = require("./db/conn")
+const conn = require("./database/models/").sequelize
 const app = require("./server")
 
 conn

@@ -1,11 +1,25 @@
-const { DataTypes } = require("sequelize")
+'use strict';
+const {
+  Model
+} = require('sequelize');
 
-const db = require("../../db/conn")
+module.exports = (sequelize, DataTypes) => {
+  class User extends Model {
+    static associate(models) {
+      User.hasMany(models.Thought);
 
-const User = db.define("User", {
+      User.hasMany(models.Comment);
+
+      User.belongsToMany(models.Thought, { 
+          through: models.Like 
+      });
+    }
+  };
+
+  User.init({
     name: {
-        type: DataTypes.STRING,
-        require: true,
+      type: DataTypes.STRING,
+      require: true,
     },
     email: {
         type: DataTypes.STRING,
@@ -14,7 +28,11 @@ const User = db.define("User", {
     password: {
         type: DataTypes.STRING,
         require: true,
-    },
-})
+    }
+  }, {
+    sequelize,
+    modelName: 'User',
+  });
 
-module.exports = User
+  return User;
+};

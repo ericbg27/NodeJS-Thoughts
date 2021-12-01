@@ -6,12 +6,6 @@ const flash = require("express-flash")
 
 const app = express()
 
-// Models
-const Thought = require("./database/models/Thought")
-const User = require("./database/models/User")
-const Like = require("./database/models/Like")
-const Comment = require("./database/models/Comment")
-
 // Import Router
 const commentsRoutes = require("./routes/commentsRoutes")
 const thoughtsRoutes = require("./routes/thoughtsRoutes")
@@ -19,7 +13,6 @@ const authRoutes = require("./routes/authRoutes")
 
 // Import Controllers
 const ThoughtController = require("./controllers/ThoughtController")
-const CommentController = require("./controllers/CommentController")
 
 app.engine("handlebars", exphbs())
 app.set("view engine", "handlebars")
