@@ -41,7 +41,7 @@ module.exports = class AuthController {
         req.flash("message", "Autenticação realizada com sucesso!")
 
         req.session.save(() => {
-            res.redirect(200, "/")
+            res.redirect("/")
         })
     }
 
@@ -94,7 +94,7 @@ module.exports = class AuthController {
             req.flash("message", "Cadastro realizado com sucesso!")
 
             req.session.save(() => {
-                res.redirect(200, "/")
+                res.redirect("/")
             })
         } catch(err) {
             console.log(err)

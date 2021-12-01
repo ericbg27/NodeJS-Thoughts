@@ -18,7 +18,7 @@ describe("Authenticated Thoughts Endpoints", () => {
                 email: "matheus@teste.com",
                 password: "1234"
             })
-            .expect(200)
+            .expect(302)
             .end(function (err) {
                 if(err) {
                     return done(err);
@@ -43,7 +43,7 @@ describe("Authenticated Thoughts Endpoints", () => {
             title: "Test title"
         });
         
-        expect(res.statusCode).toBe(201);
+        expect(res.statusCode).toBe(302);
     });
 
     it("Should delete a thought with id 1 and UserId 1", async () => {
@@ -53,7 +53,7 @@ describe("Authenticated Thoughts Endpoints", () => {
             id: 1
         })
         
-        expect(res.statusCode).toBe(200)
+        expect(res.statusCode).toBe(302)
     });
 
     it("Should edit a thought with id 2 and UserId 1", async () => {
@@ -64,7 +64,7 @@ describe("Authenticated Thoughts Endpoints", () => {
             title: "Edited Thought"
         })
         
-        expect(res.statusCode).toBe(200)
+        expect(res.statusCode).toBe(302)
     });
 
     it("Should create a like in a thought with id 4 by an user with id 1", async () => {
@@ -74,7 +74,7 @@ describe("Authenticated Thoughts Endpoints", () => {
             id: 4,
         })
         
-        expect(res.statusCode).toBe(201)
+        expect(res.statusCode).toBe(302)
     });
 
     it("Should delete a like by an user with id 1 in a thought with id 2", async () => {
@@ -84,7 +84,7 @@ describe("Authenticated Thoughts Endpoints", () => {
             id: 2,
         })
         
-        expect(res.statusCode).toBe(200)
+        expect(res.statusCode).toBe(302)
     });
 })
 
@@ -108,7 +108,7 @@ describe("Unauthenticated Thoughts Endpoints", () => {
         .send({
             title: "Test title"
         })
-        .expect(401)
+        .expect(302)
         .resolves;
     });
 
@@ -118,7 +118,7 @@ describe("Unauthenticated Thoughts Endpoints", () => {
         .send({
             id: 2
         })
-        .expect(401)
+        .expect(302)
         .resolves;
     });
 })

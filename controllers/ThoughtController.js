@@ -162,7 +162,7 @@ module.exports = class ThoughtController {
 
         // check if user exists
         if(!user) {
-            res.redirect(401, "/login")
+            res.redirect("/login")
 
             return
         } else {    
@@ -199,7 +199,7 @@ module.exports = class ThoughtController {
         })
 
         if(!user) {
-            res.redirect(401, "/login")
+            res.redirect("/login")
 
             return
         } else {
@@ -209,7 +209,7 @@ module.exports = class ThoughtController {
                 req.flash("message", "Pensamento criado com sucesso!")
 
                 req.session.save(() => {
-                    res.redirect(201, "/thoughts/dashboard")
+                    res.redirect("/thoughts/dashboard")
                 })
             } catch(error) {
                 console.log(`Aconteceu um erro ${error}`)
@@ -227,7 +227,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Pensamento removido com sucesso!")
 
             req.session.save(() => {
-                res.redirect(200, "/thoughts/dashboard")
+                res.redirect("/thoughts/dashboard")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
@@ -255,7 +255,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Pensamento atualizado com sucesso!")
 
             req.session.save(() => {
-                res.redirect(200, "/thoughts/dashboard")
+                res.redirect("/thoughts/dashboard")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
@@ -277,7 +277,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Curtida salva com sucesso!")
 
             req.session.save(() => {
-                res.redirect(201, "/")
+                res.redirect("/")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
@@ -294,7 +294,7 @@ module.exports = class ThoughtController {
             req.flash("message", "Curtida retirada com sucesso!")
 
             req.session.save(() => {
-                res.redirect(200, "/")
+                res.redirect("/")
             })
         } catch(error) {
             console.log(`Aconteceu um erro ${error}`)
