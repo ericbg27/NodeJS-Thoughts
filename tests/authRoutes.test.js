@@ -26,7 +26,7 @@ describe("Unauthenticated auth endpoints", () => {
             password: "12345",
             confirmpassword: "12345"
         })
-        .expect(200)
+        .expect(302)
         .resolves;
     });
 })
