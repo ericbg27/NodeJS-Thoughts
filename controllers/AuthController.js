@@ -1,9 +1,10 @@
-const User = require("../models/User")
+const User = require("../database/models/User")
 
 const bcrypt = require("bcryptjs")
 
 module.exports = class AuthController {
     static login(req, res) {
+        res.status(200)
         res.render("auth/login")
     }
 
@@ -15,6 +16,8 @@ module.exports = class AuthController {
 
         if(!user) {
             req.flash("message", "Usuário não encontrado!")
+
+            res.status(400)
             res.render("auth/login")
 
             return
@@ -25,6 +28,8 @@ module.exports = class AuthController {
 
         if(!passwordMatch) {
             req.flash("message", "Senha inválida!")
+            
+            res.status(400)
             res.render("auth/login")
 
             return
@@ -36,11 +41,12 @@ module.exports = class AuthController {
         req.flash("message", "Autenticação realizada com sucesso!")
 
         req.session.save(() => {
-            res.redirect("/")
+            res.redirect(200, "/")
         })
     }
 
     static register(req, res) {
+        res.status(200)
         res.render("auth/register")
     }
 
@@ -50,6 +56,8 @@ module.exports = class AuthController {
         // password match validation
         if(password != confirmpassword) {
             req.flash("message", "As senhas não conferem, tente novamente!")
+
+            res.status(400)
             res.render("auth/register")
 
             return
@@ -60,6 +68,8 @@ module.exports = class AuthController {
 
         if(checkIfUserExists) {
             req.flash("message", "O e-mail já está em uso!")
+
+            res.status(400)
             res.render("auth/register")
 
             return
@@ -84,7 +94,7 @@ module.exports = class AuthController {
             req.flash("message", "Cadastro realizado com sucesso!")
 
             req.session.save(() => {
-                res.redirect("/")
+                res.redirect(200, "/")
             })
         } catch(err) {
             console.log(err)
