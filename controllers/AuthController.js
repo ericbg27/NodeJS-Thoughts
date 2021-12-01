@@ -56,6 +56,8 @@ module.exports = class AuthController {
         // password match validation
         if(password != confirmpassword) {
             req.flash("message", "As senhas não conferem, tente novamente!")
+
+            res.status(400)
             res.render("auth/register")
 
             return
@@ -66,6 +68,8 @@ module.exports = class AuthController {
 
         if(checkIfUserExists) {
             req.flash("message", "O e-mail já está em uso!")
+
+            res.status(400)
             res.render("auth/register")
 
             return
@@ -90,7 +94,7 @@ module.exports = class AuthController {
             req.flash("message", "Cadastro realizado com sucesso!")
 
             req.session.save(() => {
-                res.redirect("/")
+                res.redirect(200, "/")
             })
         } catch(err) {
             console.log(err)

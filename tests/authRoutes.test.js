@@ -16,6 +16,19 @@ describe("Unauthenticated auth endpoints", () => {
         .get("/login")
         .expect(200);
     });
+
+    it("Should be able to register user", async () => {
+        await request
+        .post("/register")
+        .send({
+            name: "Luis",
+            email: "luis@email.com",
+            password: "12345",
+            confirmpassword: "12345"
+        })
+        .expect(200)
+        .resolves;
+    });
 })
 
 describe("Error In Authentication", () => {
@@ -36,6 +49,32 @@ describe("Error In Authentication", () => {
         .send({
             email: "matheus@teste.com",
             password: ""
+        });
+
+        expect(res.statusCode).toBe(400);
+    });
+
+    it("Should receive a 400 HTTP status when sending an already used email", async () => {
+        const res = await request
+        .post("/register")
+        .send({
+            name: "Matheus",
+            email: "matheus@teste.com",
+            password: "1234",
+            confirmpassword: "1234"
+        });
+
+        expect(res.statusCode).toBe(400);
+    });
+
+    it("Should receive a 400 HTTP status when sending wrong password confirmation", async () => {
+        const res = await request
+        .post("/register")
+        .send({
+            name: "Pedro",
+            email: "pedro@email.com",
+            password: "1234",
+            confirmpassword: "123"
         });
 
         expect(res.statusCode).toBe(400);
