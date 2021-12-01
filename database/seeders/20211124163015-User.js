@@ -7,7 +7,7 @@ const salt = bcrypt.genSaltSync(10)
 module.exports = {
   up: async (queryInterface, Sequelize) => {
    await queryInterface.bulkInsert(
-     "Users", 
+     "users", 
       [
         {
           id: 1,
@@ -30,6 +30,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("Users");
+    await queryInterface.bulkDelete("users");
   }
 };

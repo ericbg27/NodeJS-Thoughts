@@ -1,6 +1,4 @@
-const Thought = require("../database/models/Thought")
-const User = require("../database/models/User")
-const Comment = require("../database/models/Comment")
+const { Comment } = require("../database/models/")
 
 const { Op } = require("sequelize")
 
@@ -10,7 +8,7 @@ module.exports = class CommentController {
         const userId = req.session.userid
 
         const contentData = req.body.content;
-        const content = contentData.join("").trim()
+        const content = contentData.trim()
         
         const comment = {
             content: content,

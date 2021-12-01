@@ -1,7 +1,4 @@
-const Thought = require("../models/Thought")
-const User = require("../models/User")
-const Like = require("../models/Like")
-const Comment = require("../models/Comment")
+const { Thought, User, Like, Comment } = require("../database/models")
 
 const { Op } = require("sequelize")
 

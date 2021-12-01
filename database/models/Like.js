@@ -1,13 +1,18 @@
-const { DataTypes } = require("sequelize");
+'use strict';
+const {
+  Model
+} = require('sequelize');
 
-const db = require("../../db/conn");
+module.exports = (sequelize, DataTypes) => {
+  class Like extends Model {
+    static associate(models) {
+    }
+  };
 
-const User = require("./User");
-const Thought = require("./Thought");
+  Like.init({}, {
+    sequelize,
+    modelName: 'Like',
+  });
 
-const Like = db.define("Like", {});
-
-User.belongsToMany(Thought, { through: Like });
-Thought.belongsToMany(User, { through: Like, as: "UserLike" });
-
-module.exports = Like;
+  return Like;
+};

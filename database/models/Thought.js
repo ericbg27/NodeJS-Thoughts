@@ -1,18 +1,34 @@
-const { DataTypes } = require("sequelize")
+'use strict';
+const {
+  Model
+} = require('sequelize');
 
-const db = require("../../db/conn")
+module.exports = (sequelize, DataTypes) => {
+  class Thought extends Model {
+    static associate(models) {
+      Thought.belongsTo(models.User, {
+        onDelete: "CASCADE"
+      })
 
-const User = require("./User")
+      Thought.belongsToMany(models.User, { 
+        through: models.Like, 
+        as: "UserLike" 
+      });
 
-const Thought = db.define("Thought", {
+      Thought.hasMany(models.Comment);
+    }
+  };
+
+  Thought.init({
     title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        require: true,
-    },
-})
+      type: DataTypes.STRING,
+      allowNull: false,
+      require: true,
+    }
+  }, {
+    sequelize,
+    modelName: 'Thought',
+  });
 
-Thought.belongsTo(User)
-User.hasMany(Thought)
-
-module.exports = Thought
+  return Thought;
+};
