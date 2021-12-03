@@ -1,9 +1,11 @@
-const { Comment } = require("../database/models/")
-
 const { Op } = require("sequelize")
 
 module.exports = class CommentController {
-    static async createComment(req, res) {
+    constructor(Comment) {
+        this.Comment = Comment
+    }
+
+    async createComment(req, res) {
         const thoughtId = req.body.id
         const userId = req.session.userid
 
@@ -17,7 +19,7 @@ module.exports = class CommentController {
         }
 
         try {
-            await Comment.create(comment)
+            await this.Comment.create(comment)
 
             req.flash("message", "Comentário criado com sucesso!")
 
@@ -29,11 +31,11 @@ module.exports = class CommentController {
         }
     }
 
-    static async deleteComment(req, res) {
+    async deleteComment(req, res) {
         const commentId = req.body.id
         
         try {
-            await Comment.destroy({ where: { id: commentId } })
+            await this.Comment.destroy({ where: { id: commentId } })
 
             req.flash("message", "Comentário deletado com sucesso!")
 

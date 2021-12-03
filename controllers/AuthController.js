@@ -1,18 +1,20 @@
-const { User } = require("../database/models/")
-
 const bcrypt = require("bcryptjs")
 
 module.exports = class AuthController {
-    static login(req, res) {
+    constructor(User) {
+        this.User = User
+    }
+
+    login(req, res) {
         res.status(200)
         res.render("auth/login")
     }
 
-    static async loginPost(req, res) {
+    async loginPost(req, res) {
         const {email, password} = req.body
 
         // find user
-        const user = await User.findOne({where: {email: email}})
+        const user = await this.User.findOne({where: {email: email}})
 
         if(!user) {
             req.flash("message", "Usuário não encontrado!")
@@ -45,12 +47,12 @@ module.exports = class AuthController {
         })
     }
 
-    static register(req, res) {
+    register(req, res) {
         res.status(200)
         res.render("auth/register")
     }
 
-    static async registerPost(req, res) {
+    async registerPost(req, res) {
         const {name, email, password, confirmpassword} = req.body
 
         // password match validation
@@ -64,7 +66,7 @@ module.exports = class AuthController {
         }
 
         // Check if user exists
-        const checkIfUserExists = await User.findOne({where: {email: email}})
+        const checkIfUserExists = await this.User.findOne({where: {email: email}})
 
         if(checkIfUserExists) {
             req.flash("message", "O e-mail já está em uso!")
@@ -86,7 +88,7 @@ module.exports = class AuthController {
         }
 
         try {
-            const createdUser = await User.create(user)
+            const createdUser = await this.User.create(user)
 
             // initialize session
             req.session.userid = createdUser.id
@@ -101,7 +103,7 @@ module.exports = class AuthController {
         }
     }
 
-    static logout(req, res) {
+    logout(req, res) {
         req.session.destroy()
         res.redirect("/login")
     }

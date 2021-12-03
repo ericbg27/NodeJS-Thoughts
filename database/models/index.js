@@ -11,6 +11,7 @@ const config = envConfigs[env];
 const db = {};
 
 let sequelize;
+
 if (config.url) {
   sequelize = new Sequelize(config.url, config);
 } else {
@@ -40,7 +41,8 @@ try {
   console.log(`Não foi possível conectar: ${err}`)
 }
 
-db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+db.sequelize = sequelize;
 
 module.exports = db;

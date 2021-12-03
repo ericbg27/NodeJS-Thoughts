@@ -8,11 +8,14 @@ const app = express()
 
 // Import Router
 const commentsRoutes = require("./routes/commentsRoutes")
-const thoughtsRoutes = require("./routes/thoughtsRoutes")
+const thoughtsRoutes = require("./routes/thoughtsRoutes").router
 const authRoutes = require("./routes/authRoutes")
 
+// Import Models
+const { User, Thought, Like, Comment } = require("./database/models")
+
 // Import Controllers
-const ThoughtController = require("./controllers/ThoughtController")
+const thoughtController = require("./routes/thoughtsRoutes").thoughtController
 
 app.engine("handlebars", exphbs())
 app.set("view engine", "handlebars")
@@ -66,6 +69,6 @@ app.use("/comments", commentsRoutes)
 app.use("/thoughts", thoughtsRoutes)
 app.use("/", authRoutes)
 
-app.get("/", ThoughtController.showThoughts)
+app.get("/", thoughtController.showThoughts.bind(thoughtController))
 
 module.exports = app
