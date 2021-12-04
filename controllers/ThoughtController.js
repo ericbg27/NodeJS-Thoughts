@@ -53,8 +53,6 @@ module.exports = class ThoughtController {
 
         const currentUserId = req.session.userid;
 
-        console.log(thoughts)
-
         for(let thought in thoughts) {
             let userIsOwner = false
             if(thoughts[thought].UserId == currentUserId) {
@@ -198,7 +196,6 @@ module.exports = class ThoughtController {
             where: {
                 id: thought.UserId,
             },
-            //include: this.Thought,
             plain: true,
         })
 

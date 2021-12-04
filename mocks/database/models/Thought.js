@@ -1,5 +1,7 @@
 'use strict';
 
+const fakeModel = require("sequelize-mock/src/model");
+
 module.exports = (sequelize, DataTypes) => {
     const Thought = sequelize.define("Thought", {
         title: "Mock Title",
@@ -24,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
                 UserId: 1,
                 UserLike: [
                     {
+                        name: "User2",
                         id: 2,
                     }
                 ],
@@ -39,6 +42,35 @@ module.exports = (sequelize, DataTypes) => {
                 UserId: 2,
                 UserLike: [
                     {
+                        name: "User1",
+                        id: 1,
+                    },
+                    {
+                        name: "User4",
+                        id: 4
+                    }
+                ],
+                Comments: [
+                    {
+                        UserId: 1,
+                        content: "Test Comment by User 1"
+                    }
+                ]
+            });
+            const thought3 = Thought.build({
+                title: "Test Thought 3",
+                UserId: 3,
+                UserLike: [
+                    {
+                        name: "User1",
+                        id: 1,
+                    },
+                    {
+                        name: "User2",
+                        id: 2,
+                    },
+                    {
+                        name: "User3",
                         id: 1,
                     }
                 ],
@@ -52,15 +84,18 @@ module.exports = (sequelize, DataTypes) => {
 
             let thoughts = [];
 
-            if(queryOptions[0].where.userId) {
-                if(queryOptions[0].where.userId === 1) {
+            if(queryOptions[0].where.UserId) {
+                if(queryOptions[0].where.UserId === 1) {
                     thoughts.push(thought1);
-                } else if(queryOptions.where.userId === 2) {
+                } else if(queryOptions[0].where.UserId === 2) {
                     thoughts.push(thought2);
+                } else if(queryOptions[0].where.UserId === 3) {
+                    thoughts.push(thought3);
                 }
             } else {
                 thoughts.push(thought1);
                 thoughts.push(thought2);
+                thoughts.push(thought3);
             }
 
             return thoughts;

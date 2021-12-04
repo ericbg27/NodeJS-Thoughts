@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define("User", {
       name: "Eric",
       email: "eric@teste.com",
-      password: bcrypt.hashSync("1234", salt),
+      password: bcrypt.hashSync("1234"),
     }, {});
 
     User.associate = function (models) {
@@ -30,16 +30,30 @@ module.exports = (sequelize, DataTypes) => {
             email: "test@email.com",
             password: "1234"
           });
-        } else if(queryOptions[0].where.id === 1) {
+        } else if(queryOptions[0].where.id === 2) {
           return User.build({
             id: 2,
             name: "Test 2",
             email: "test2@email.com",
             password: "1234"
           });
-        } else {
-          return null;
+        } else if(queryOptions[0].where.id === 3) {
+          return User.build({
+            id: 3,
+            name: "Test 3",
+            email: "test3@email.com",
+            password: "1234"
+          });
+        } else if(queryOptions[0].where.id === 4) {
+          return User.build({
+            id: 4,
+            name: "Test 4",
+            email: "test4@email.com",
+            password: "1234"
+          });
         }
+
+        return null;
       }
     });
 
