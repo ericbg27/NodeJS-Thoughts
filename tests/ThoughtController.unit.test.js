@@ -1,9 +1,10 @@
 const { User, Thought, Comment, Like } = require("../mocks/database/models");
 
 const ThoughtController = require("../controllers/ThoughtController");
+const flash = require("express-flash");
 const thoughtController = new ThoughtController(User, Thought, Comment, Like);
 
-describe("Thoughts controller showThoughts method test", () => {
+describe("Thoughts controller showThoughts method tests", () => {
     it("Should return two thoughts with their respective data for an unlogged user", async () => {
         const req = {
             query: {},
@@ -85,7 +86,7 @@ describe("Thoughts controller showThoughts method test", () => {
     });
 })
 
-describe("Thoughts controller dashboard method test", () => {
+describe("Thoughts controller dashboard method tests", () => {
     it("Should return one thought which belongs to user with ID 1", async () => {
         const req = {
             query: {},
@@ -120,7 +121,7 @@ describe("Thoughts controller dashboard method test", () => {
 
         expect(onlyThought.title).toEqual("Test Thought 1");
         expect(onlyThought.UserId).toEqual(1);
-    })
+    });
 
     it("Should return no thoughts since user with ID 4 has no thoughts", async () => {
         const req = {
@@ -151,7 +152,7 @@ describe("Thoughts controller dashboard method test", () => {
 
         expect(emptyThougths).toEqual(true);
         expect(thoughts.length).toEqual(0);
-    })
+    });
 
     it("Should redirect for an unlogged user", async () => {
         const req = {
@@ -167,14 +168,101 @@ describe("Thoughts controller dashboard method test", () => {
                 this.content = data;
             },
             redirect: function(url) {
+                res.resStatus = 302;
                 this.redirected = true;
             }
         };
 
         await thoughtController.dashboard(req, res);
 
-        //expect(res.resStatus).toBe(302);
+        expect(res.resStatus).toBe(302);
         expect(res.redirected).toEqual(true);
         expect(res.content).toBe(undefined);
-    })
+    });
+})
+
+describe("Thoughts controller createThoughtSave method tests", () => {
+    it("Should create a thought with title 'Test Title' with user ID 1", async () => {
+        const req = {
+            query: {},
+            session: { 
+                userid: 1,
+                save: function(f) {
+                    f();
+                }
+            },
+            body: {
+                title: "Test Title"
+            },
+            message: undefined,
+            flash: function(type, msg) {
+                this.message = msg;
+            }
+        };
+        const res = {
+            resStatus: 0,
+            content: undefined,
+            redirected: false,
+            status: function(value) { this.resStatus = value; },
+            render: function(page, data) { 
+                this.content = data;
+            },
+            redirect: function(url) {
+                res.resStatus = 302;
+                this.redirected = true;
+            }
+        };
+
+        const oldTitle = thoughtController.Thought.title;
+        const oldUserId = thoughtController.Thought.UserId;
+
+        await thoughtController.createThoughtSave(req, res);
+
+        expect(res.resStatus).toBe(302);
+        expect(res.redirected).toEqual(true);
+        expect(req.message).toEqual("Pensamento criado com sucesso!");
+
+        expect(thoughtController.Thought.title).toEqual("Test Title");
+        expect(thoughtController.Thought.UserId).toEqual(1);
+
+        thoughtController.Thought.title = oldTitle;
+        thoughtController.Thought.UserId = oldUserId;
+    });
+
+    it("Should not create a thought with title 'Test Title' and should redirect to login page", async () => {
+        const req = {
+            query: {},
+            session: {},
+            body: {
+                title: "Test Title"
+            },
+            message: undefined,
+            flash: function(type, msg) {
+                this.message = msg;
+            }
+        };
+        const res = {
+            resStatus: 0,
+            content: undefined,
+            redirected: false,
+            urlRedirect: undefined,
+            status: function(value) { this.resStatus = value; },
+            render: function(page, data) { 
+                this.content = data;
+            },
+            redirect: function(url) {
+                res.resStatus = 302;
+                this.redirected = true;
+                this.urlRedirect = url;
+            }
+        };
+
+        await thoughtController.createThoughtSave(req, res);
+
+        expect(res.resStatus).toBe(302);
+        expect(res.urlRedirect).toEqual("/login");
+        expect(res.redirected).toEqual(true);
+
+        expect(thoughtController.Thought.title).not.toEqual("Test Title");
+    });
 })

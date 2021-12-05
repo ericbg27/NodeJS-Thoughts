@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         UserId: 1,
     }, {});
 
+    Thought.create = Thought.upsert; //Workaround to deal with create function problem in sequelize-mock
+
     Thought.associate = function (models) {
         Thought.belongsTo(models.User)
 
@@ -100,7 +102,16 @@ module.exports = (sequelize, DataTypes) => {
 
             return thoughts;
         }
-    })
+    });
+
+    Thought.$queryInterface.$useHandler(function(query, queryOptions, done) {
+        if(query === "upsert") {
+            const thought = queryOptions[0];
+
+            Thought.title = thought.title;
+            Thought.UserId = thought.UserId;
+        }
+    });
 
     return Thought;
 }
