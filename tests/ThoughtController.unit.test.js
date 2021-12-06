@@ -1,8 +1,7 @@
 const { User, Thought, Comment, Like } = require("../mocks/database/models");
 
 const ThoughtController = require("../controllers/ThoughtController");
-const flash = require("express-flash");
-const thoughtController = new ThoughtController(User, Thought, Comment, Like);
+const thoughtController = new ThoughtController(User, Thought, Like, Comment);
 
 describe("Thoughts controller showThoughts method tests", () => {
     it("Should return two thoughts with their respective data for an unlogged user", async () => {
@@ -265,4 +264,94 @@ describe("Thoughts controller createThoughtSave method tests", () => {
 
         expect(thoughtController.Thought.title).not.toEqual("Test Title");
     });
+})
+
+describe("Thoughts controller likeThought and unlikeThought methods tests", () => {
+    let originalUserId, originalThoughtId;
+
+    beforeAll(function() {
+        originalUserId = thoughtController.Like.UserId;
+        originalThoughtId = thoughtController.Like.ThoughtId;
+    });
+
+    afterAll(function() {
+        thoughtController.Like.UserId = originalUserId;
+        thoughtController.Like.ThoughtId = originalThoughtId;
+    });
+
+    it("Should create a like in thought with ID 3 by user with ID 2", async () => {
+        const req = {
+            query: {},
+            session: { 
+                userid: 2,
+                save: function(f) {
+                    f();
+                }
+            },
+            body: {
+                id: 3
+            },
+            message: undefined,
+            flash: function(type, msg) {
+                this.message = msg;
+            }
+        };
+        const res = {
+            resStatus: 0,
+            redirected: false,
+            status: function(value) { this.resStatus = value; },
+            redirect: function(url) {
+                res.resStatus = 302;
+                this.redirected = true;
+            }
+        };
+
+        await thoughtController.likeThought(req, res);
+
+        expect(res.resStatus).toBe(302);
+        expect(res.redirected).toEqual(true);
+
+        expect(req.message).toEqual("Curtida salva com sucesso!");
+        
+        expect(thoughtController.Like.UserId).toEqual(2);
+        expect(thoughtController.Like.ThoughtId).toEqual(3);
+    });
+
+    it("Should delete like in thought with ID 3 by user with ID 2", async () => {
+        const req = {
+            query: {},
+            session: { 
+                userid: 2,
+                save: function(f) {
+                    f();
+                }
+            },
+            body: {
+                id: 3
+            },
+            message: undefined,
+            flash: function(type, msg) {
+                this.message = msg;
+            }
+        };
+        const res = {
+            resStatus: 0,
+            redirected: false,
+            status: function(value) { this.resStatus = value; },
+            redirect: function(url) {
+                res.resStatus = 302;
+                this.redirected = true;
+            }
+        };
+
+        await thoughtController.unlikeThought(req, res);
+
+        expect(res.resStatus).toBe(302);
+        expect(res.redirected).toEqual(true);
+
+        expect(req.message).toEqual("Curtida retirada com sucesso!");
+
+        expect(thoughtController.Like.ThoughtId).toEqual(-1);
+        expect(thoughtController.Like.UserId).toEqual(-1);
+    })
 })

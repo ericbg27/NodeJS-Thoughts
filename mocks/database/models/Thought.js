@@ -1,7 +1,5 @@
 'use strict';
 
-const fakeModel = require("sequelize-mock/src/model");
-
 module.exports = (sequelize, DataTypes) => {
     const Thought = sequelize.define("Thought", {
         title: "Mock Title",
@@ -19,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         Thought.hasMany(models.Comment);
-    }
+    };
 
     Thought.$queryInterface.$useHandler(function(query, queryOptions, done) {
         if(query === "findAll") {
