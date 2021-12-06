@@ -3,9 +3,11 @@
 module.exports = (sequelize, DataTypes) => {
     const Comment = sequelize.define("Comment", {
         content: "Mock Comment",
-        userId: 1,
-        thoughtId: 1
+        UserId: 1,
+        ThoughtId: 1
     }, {});
+
+    Comment.create = Comment.upsert;
 
     Comment.associate = function (models) {
         Comment.belongsTo(models.Thought);
@@ -14,22 +16,25 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Comment.$queryInterface.$useHandler(function(query, queryOptions, done) {
-        if(query === "findAll") {
-            if(queryOptions[0].where.thoughtId === 1) {
-                if(queryOptions[0].where.userId === 2) {
-                    return Comment.build({
-                        content: "Test Comment",
-                        userId: 2,
-                        thoughtId: 1
-                    });
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
+        if(query === "upsert") {
+            const comment = queryOptions[0];
+            
+            Comment.id = 1;
+            Comment.content = comment.content;
+            Comment.ThoughtId = comment.ThoughtId;
+            Comment.UserId = comment.UserId;
+        }
+    });
+
+    Comment.$queryInterface.$useHandler(function(query, queryOptions, done) {
+        if(query === "destroy") {
+            if(queryOptions[0].where.id === Comment.id) {
+                Comment.id = -1;
             }
         }
-    })
+
+        return null;
+    });
 
     return Comment;
 }
