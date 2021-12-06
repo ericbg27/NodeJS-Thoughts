@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       password: bcrypt.hashSync("1234"),
     }, {});
 
+    User.create = User.upsert; //Workaround to deal with create function problem in sequelize-mock
+
     User.associate = function (models) {
       User.hasMany(models.Thought);
 
@@ -88,6 +90,24 @@ module.exports = (sequelize, DataTypes) => {
         return null;
       }
     });
+
+    User.$queryInterface.$useHandler(function(query, queryOptions, done) {
+      if(query === "upsert") {
+        const user = queryOptions[0];
+
+        User.name = user.name;
+        User.email = user.email;
+        User.password = user.password;
+
+        return User.build({
+          id: 1,
+          name: "User1",
+          email: "user1@email.com"
+        })
+      }
+
+      return null;
+    })
 
     return User;
 }
