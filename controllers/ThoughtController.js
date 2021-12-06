@@ -1,9 +1,14 @@
-const { Thought, User, Like, Comment } = require("../database/models")
-
 const { Op } = require("sequelize")
 
 module.exports = class ThoughtController {
-    static async showThoughts(req, res) {
+    constructor(User, Thought, Like, Comment) {
+        this.User = User;
+        this.Thought = Thought;
+        this.Like = Like;
+        this.Comment = Comment;
+    }
+    
+    async showThoughts(req, res) {
         let search = ""
 
         if(req.query.search) {
@@ -18,17 +23,17 @@ module.exports = class ThoughtController {
             order = "DESC"
         }
 
-        const thoughtsData = await Thought.findAll({
-            include: [User, 
+        const thoughtsData = await this.Thought.findAll({
+            include: [this.User, 
                 {
-                    model: Comment,
+                    model: this.Comment,
                     include: {
-                        model: User,
+                        model: this.User,
                         attributes: ["name"]
                     }
                 }, 
                 {
-                    model: User,
+                    model: this.User,
                     as: "UserLike"
                 }
             ],
@@ -137,21 +142,21 @@ module.exports = class ThoughtController {
         res.render("thoughts/home", { thoughts, search, thoughtsQty })
     }
 
-    static async dashboard(req, res) {
+    async dashboard(req, res) {
         let userId = req.session.userid
         if(userId === undefined) {
             userId = -1
         }
 
-        const user = await User.findOne({
+        const user = await this.User.findOne({
             where: {
                 id: userId,
             },
-            //include: Thought,
+            //include: this.Thought,
             plain: true,
         })
 
-        const userThoughts = await Thought.findAll({
+        const userThoughts = await this.Thought.findAll({
             where: {
                 UserId: userId,
             }
@@ -176,22 +181,21 @@ module.exports = class ThoughtController {
         }
     }
 
-    static createThought(req, res) {
+    createThought(req, res) {
         res.status(200)
         res.render("thoughts/create")
     }
 
-    static async createThoughtSave(req, res) {
+    async createThoughtSave(req, res) {
         const thought = {
             title: req.body.title,
             UserId: (req.session.userid ? req.session.userid : -1)
         }
 
-        const user = await User.findOne({
+        const user = await this.User.findOne({
             where: {
                 id: thought.UserId,
             },
-            //include: Thought,
             plain: true,
         })
 
@@ -201,7 +205,7 @@ module.exports = class ThoughtController {
             return
         } else {
             try {
-                await Thought.create(thought)
+                await this.Thought.create(thought)
 
                 req.flash("message", "Pensamento criado com sucesso!")
 
@@ -214,12 +218,12 @@ module.exports = class ThoughtController {
         }
     }
 
-    static async removeThought(req, res) {
+    async removeThought(req, res) {
         const id = req.body.id
         const UserId = req.session.userid
 
         try {
-            await Thought.destroy({where: {id: id, UserId: UserId}})
+            await this.Thought.destroy({where: {id: id, UserId: UserId}})
 
             req.flash("message", "Pensamento removido com sucesso!")
 
@@ -231,16 +235,16 @@ module.exports = class ThoughtController {
         }
     }
 
-    static async updateThought(req, res) {
+    async updateThought(req, res) {
         const id = req.params.id
 
-        const thought = await Thought.findOne({where: {id: id}, raw: true})
+        const thought = await this.Thought.findOne({where: {id: id}, raw: true})
         
         res.status(200)
         res.render("thoughts/edit", {thought})
     }
 
-    static async updateThoughtSave(req, res) {
+    async updateThoughtSave(req, res) {
         const id = req.body.id
 
         const thought = {
@@ -248,7 +252,7 @@ module.exports = class ThoughtController {
         }
 
         try {
-            await Thought.update(thought, {where: {id: id}})
+            await this.Thought.update(thought, {where: {id: id}})
             req.flash("message", "Pensamento atualizado com sucesso!")
 
             req.session.save(() => {
@@ -259,7 +263,7 @@ module.exports = class ThoughtController {
         }
     }
 
-    static async likeThought(req, res) {
+    async likeThought(req, res) {
         const thoughtId = req.body.id
         const userId = req.session.userid
         
@@ -269,7 +273,7 @@ module.exports = class ThoughtController {
         }
 
         try {
-            await Like.create(like)
+            await this.Like.create(like)
            
             req.flash("message", "Curtida salva com sucesso!")
 
@@ -281,12 +285,12 @@ module.exports = class ThoughtController {
         }
     }
 
-    static async unlikeThought(req, res) {
+    async unlikeThought(req, res) {
         const thoughtId = req.body.id
         const userId = req.session.userid
 
         try {
-            await Like.destroy({ where: { thoughtId: thoughtId, userId: userId }})
+            await this.Like.destroy({ where: { thoughtId: thoughtId, userId: userId }})
 
             req.flash("message", "Curtida retirada com sucesso!")
 
