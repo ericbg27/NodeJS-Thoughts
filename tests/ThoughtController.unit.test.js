@@ -42,6 +42,9 @@ describe("Thoughts controller showThoughts method tests", () => {
         expect(thought1.likeString).toEqual("Curtido por User2");
         expect(thought2.likeString).toEqual("Curtido por User1 e User4");
         expect(thought3.likeString).toEqual("Curtido por User1, User2 e mais 1 outros");
+
+        // userIsLogged variable should evaluate to false
+        expect(res.content.userIsLogged).toEqual(false);
     });
 
     it("Should return two thoughts with their respective data for a logged user with ID 1", async () => {
@@ -82,6 +85,9 @@ describe("Thoughts controller showThoughts method tests", () => {
         expect(thought1.likeString).toEqual("Curtido por User2");
         expect(thought2.likeString).toEqual("Curtido por Você e User4");
         expect(thought3.likeString).toEqual("Curtido por Você, User2 e mais 1 outros");
+
+        // userIsLogged variable should evaluate to true
+        expect(res.content.userIsLogged).toEqual(true);
     });
 })
 
