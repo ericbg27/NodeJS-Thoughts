@@ -137,9 +137,14 @@ module.exports = class ThoughtController {
                 })
             }
         }
+
+        let userIsLogged = false;
+        if(currentUserId) {
+            userIsLogged = true;
+        }
         
         res.status(200)
-        res.render("thoughts/home", { thoughts, search, thoughtsQty })
+        res.render("thoughts/home", { thoughts, search, thoughtsQty, userIsLogged })
     }
 
     async dashboard(req, res) {

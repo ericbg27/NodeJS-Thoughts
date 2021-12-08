@@ -64,13 +64,15 @@
             </div>
         </figure>
         <div class="comment-section">
-            <div class="comment-submit">
-                <form action="/comments/add" method="POST" id="comment-form">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <textarea maxlength="255" name="content" placeholder="Escreva aqui seu comentário"></textarea>
-                    <input type="submit" class="btn" value="Comentar">
-                </form>
-            </div>
+            {{#if ../userIsLogged}}
+                <div class="comment-submit">
+                    <form action="/comments/add" method="POST" id="comment-form">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <textarea maxlength="255" name="content" placeholder="Escreva aqui seu comentário"></textarea>
+                        <input type="submit" class="btn" value="Comentar">
+                    </form>
+                </div>
+            {{/if}}
             <div class="comment-subsection">
                 {{#each this.Comments}}
                     <div class="comment">
