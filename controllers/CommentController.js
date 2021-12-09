@@ -46,4 +46,26 @@ module.exports = class CommentController {
             console.log(`Aconteceu um erro ${error}`)
         }
     }
+
+    async updateComment(req, res) {
+        const commentId = req.body.commentid
+        const newContent = req.body.content
+        
+        const comment = {
+            id: commentId,
+            content: newContent
+        }
+
+        try {
+            await this.Comment.update(comment, { where: { id: commentId } })
+
+            req.flash("message", "Comentário atualizado com sucesso!")
+
+            req.session.save(() => {
+                res.redirect("/")
+            })
+        } catch(error) {
+            console.log(`Aconteceu um erro: ${error}`)
+        }
+    }
 }

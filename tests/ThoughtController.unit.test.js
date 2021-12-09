@@ -4,7 +4,7 @@ const ThoughtController = require("../controllers/ThoughtController");
 const thoughtController = new ThoughtController(User, Thought, Like, Comment);
 
 describe("Thoughts controller showThoughts method tests", () => {
-    it("Should return two thoughts with their respective data for an unlogged user", async () => {
+    it("Should return three thoughts with their respective data for an unlogged user", async () => {
         const req = {
             query: {},
             session: {}
@@ -47,7 +47,7 @@ describe("Thoughts controller showThoughts method tests", () => {
         expect(res.content.userIsLogged).toEqual(false);
     });
 
-    it("Should return two thoughts with their respective data for a logged user with ID 1", async () => {
+    it("Should return three thoughts with their respective data for a logged user with ID 1", async () => {
         const req = {
             query: {},
             session: { userid: 1 }
@@ -89,6 +89,37 @@ describe("Thoughts controller showThoughts method tests", () => {
         // userIsLogged variable should evaluate to true
         expect(res.content.userIsLogged).toEqual(true);
     });
+
+    it("Should return two thoughts where one has a comment with ID 2 that has userEditing parameter equal to true", async () => {
+        const req = {
+            query: {
+                commentid: 2
+            },
+            session: { userid: 1 }
+        };
+        const res = {
+            resStatus: 0,
+            content: undefined,
+            status: function(value) { this.resStatus = value; },
+            render: function(page, data) { 
+                this.content = data;
+            }
+        };
+
+        await thoughtController.showThoughts(req, res);
+
+        expect(res.resStatus).toBe(200);
+        expect(res.content).not.toBe(undefined);
+        expect(res.content.thoughtsQty).toEqual(3);
+
+        const thought1 = res.content.thoughts[0];
+        const thought2 = res.content.thoughts[1];
+        const thought3 = res.content.thoughts[2];
+
+        expect(thought1.Comments[0].userEditing).toEqual(false);
+        expect(thought2.Comments[0].userEditing).toEqual(true);
+        expect(thought3.Comments[0].userEditing).toEqual(false);
+    })
 })
 
 describe("Thoughts controller dashboard method tests", () => {

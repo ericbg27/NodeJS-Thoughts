@@ -51,7 +51,9 @@ module.exports = class ThoughtController {
             thoughtsQty = false
         }
 
-        const currentUserId = req.session.userid;
+        const currentUserId = req.session.userid
+        
+        const commentToEdit = req.query.commentid
 
         for(let thought in thoughts) {
             let userIsOwner = false
@@ -133,6 +135,16 @@ module.exports = class ThoughtController {
 
                 Object.defineProperty(thoughts[thought].Comments[comment], "Owns", {
                     value: userOwns,
+                    enumerable: true
+                })
+                
+                let editComment = false
+                if(thoughts[thought].Comments[comment].id == commentToEdit) {
+                    editComment = true                   
+                }
+
+                Object.defineProperty(thoughts[thought].Comments[comment], "userEditing", {
+                    value: editComment,
                     enumerable: true
                 })
             }
@@ -258,6 +270,7 @@ module.exports = class ThoughtController {
 
         try {
             await this.Thought.update(thought, {where: {id: id}})
+            
             req.flash("message", "Pensamento atualizado com sucesso!")
 
             req.session.save(() => {
