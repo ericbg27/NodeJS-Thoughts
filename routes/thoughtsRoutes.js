@@ -19,6 +19,7 @@ router.post("/remove", checkAuth, thoughtController.removeThought.bind(thoughtCo
 router.post("/like", checkAuth, thoughtController.likeThought.bind(thoughtController))
 router.post("/unlike", checkAuth, thoughtController.unlikeThought.bind(thoughtController))
 router.get("/", thoughtController.showThoughts.bind(thoughtController))
+router.post("/thoughts", thoughtController.showThoughts.bind(thoughtController))
 
 module.exports = {
     router,

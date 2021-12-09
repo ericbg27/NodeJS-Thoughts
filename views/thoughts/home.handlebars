@@ -77,12 +77,30 @@
                 {{#each this.Comments}}
                     <div class="comment">
                         <p>Por: {{this.User.name}}</p>
-                        <p class="multiline">{{this.content}}</p>
-                        {{#if this.Owns}}
-                            <form action="/comments/delete" method="POST" class="comment-options">
-                                <input type="hidden" name="id" value={{this.id}}>
-                                <input type="submit" class="btn" value="Excluir">
-                            </form>
+                        {{#if this.userEditing}}
+                            {{#if this.Owns}}
+                                <span class="actions">
+                                    <form action="/comments/edit" method="POST">
+                                        <input type="hidden" name="commentid" value={{this.id}}>
+                                        <textarea maxlength="255" name="content">{{this.content}}</textarea>
+                                        <input type="submit" class="btn" value="Enviar">
+                                    </form>
+                                </span>
+                            {{/if}}
+                        {{else}}
+                            <p class="multiline">{{this.content}}</p>
+                            {{#if this.Owns}}
+                                <span class="actions">
+                                    <form action="/comments/delete" method="POST">
+                                        <input type="hidden" name="id" value={{this.id}}>
+                                        <input type="submit" class="btn" value="Excluir">
+                                    </form>
+                                    <form action="/" method="GET">
+                                        <input type="hidden" name="commentid" value={{this.id}}>
+                                        <input type="submit" class="btn" value="Editar">
+                                    </form>
+                                </span>
+                            {{/if}}
                         {{/if}}
                     </div>
                 {{/each}}
