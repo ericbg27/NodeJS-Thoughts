@@ -32,6 +32,14 @@ module.exports = (sequelize, DataTypes) => {
                 Comment.id = -1;
             }
         }
+    });
+
+    Comment.$queryInterface.$useHandler(function(query, queryOptions, done) {
+        if(query === "update") {
+            if(queryOptions[1].where.id === Comment.id) {
+                Comment.content = queryOptions[0].content;
+            }
+        }
 
         return null;
     });

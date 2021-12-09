@@ -59,7 +59,7 @@ module.exports = class CommentController {
         try {
             await this.Comment.update(comment, { where: { id: commentId } })
 
-            req.flash("message", "Cometário atualizado com sucesso!")
+            req.flash("message", "Comentário atualizado com sucesso!")
 
             req.session.save(() => {
                 res.redirect("/")
