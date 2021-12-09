@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
                 ],
                 Comments: [
                     {
+                        id: 1,
                         UserId: 2,
                         content: "Test Comment by User 2"
                     }
@@ -52,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
                 ],
                 Comments: [
                     {
+                        id: 2,
                         UserId: 1,
                         content: "Test Comment by User 1"
                     }
@@ -76,6 +78,7 @@ module.exports = (sequelize, DataTypes) => {
                 ],
                 Comments: [
                     {
+                        id: 3,
                         UserId: 1,
                         content: "Test Comment by User 1"
                     }
