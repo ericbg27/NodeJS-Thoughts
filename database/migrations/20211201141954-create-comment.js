@@ -11,10 +11,10 @@ module.exports = {
       content: {
         type: Sequelize.TEXT
       },
-      thoughtId: {
+      ThoughtId: {
         type: Sequelize.INTEGER
       },
-      userId: {
+      UserId: {
         type: Sequelize.INTEGER
       },
       createdAt: {

@@ -8,9 +8,10 @@ const commentController = new CommentController(Comment)
 
 // helpers
 const checkAuth = require("../helpers/auth").checkAuth
+const checkComment = require("../helpers/commentValidator").checkComment
 
-router.post("/add", checkAuth, commentController.createComment.bind(commentController))
+router.post("/add", [checkAuth, checkComment], commentController.createComment.bind(commentController))
 router.post("/delete", checkAuth, commentController.deleteComment.bind(commentController))
-router.post("/edit", checkAuth, commentController.updateComment.bind(commentController))
+router.post("/edit", [checkAuth, checkComment], commentController.updateComment.bind(commentController))
 
 module.exports = router
