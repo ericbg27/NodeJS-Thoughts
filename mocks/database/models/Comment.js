@@ -16,6 +16,19 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Comment.$queryInterface.$useHandler(function(query, queryOptions, done) {
+        if(query === "findOne") {
+            if(queryOptions[0].where.id === 1) {
+                return Comment.build({
+                    id: 1,
+                    content: "Test Comment 1",
+                    ThoughtId: 1,
+                    UserId: 2
+                })
+            }
+        }
+    })
+
+    Comment.$queryInterface.$useHandler(function(query, queryOptions, done) {
         if(query === "upsert") {
             const comment = queryOptions[0];
             

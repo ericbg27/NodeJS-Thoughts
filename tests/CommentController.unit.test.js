@@ -68,6 +68,9 @@ describe("CommentController deleteComment method tests", () => {
             resStatus: 0,
             redirected: false,
             urlRedirect: undefined,
+            status: function(code) {
+                this.resStatus = code
+            },
             redirect: function(url) {
                 this.resStatus = 302;
                 this.urlRedirect = url;

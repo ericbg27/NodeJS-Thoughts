@@ -33,17 +33,39 @@ module.exports = class CommentController {
 
     async deleteComment(req, res) {
         const commentId = req.body.id
-        
-        try {
-            await this.Comment.destroy({ where: { id: commentId } })
 
-            req.flash("message", "Comentário deletado com sucesso!")
+        console.log(commentId)
 
-            req.session.save(() => {
-                res.redirect("/")
-            })
-        } catch(error) {
-            console.log(`Aconteceu um erro ${error}`)
+        const comment = await this.Comment.findOne({
+            where: { 
+                id: commentId 
+            },
+            raw: true,
+        })
+
+        if(!comment) {
+            res.redirect("/");
+        } else {
+            if(req.session.userid !== comment.UserId) {
+                req.flash("message", "Você não pode deletar esse comentário!")
+                
+                res.status(400)
+                res.render("/thoughts/home")
+
+                return
+            }
+            
+            try {
+                await this.Comment.destroy({ where: { id: commentId } })
+
+                req.flash("message", "Comentário deletado com sucesso!")
+
+                req.session.save(() => {
+                    res.redirect("/")
+                })
+            } catch(error) {
+                console.log(`Aconteceu um erro ${error}`)
+            }
         }
     }
 
